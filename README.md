@@ -1,56 +1,108 @@
-# 算法可视化项目集
+# Combined Algorithms Visualizer
 
-这个项目整合了两个算法可视化工具：
-1. 匹配算法可视化 - 用于展示和交互式学习一对一二分图匹配等算法
-2. 最大流算法可视化 - 用于展示和交互式学习网络流算法
+A collection of algorithm visualization tools designed to help understand complex algorithms through interactive visual representations.
 
-## 项目结构
+## Overview
+
+This project combines multiple algorithm visualization tools into a single unified platform. It includes:
+
+- **Maxflow Algorithm Visualizer**: Interactive visualization of maximum flow algorithms in networks
+- **Matching Algorithm Visualizer**: Visual representation of matching algorithms
+- **Teacher Substitution App**: An application for teacher substitution management
+
+## Live Demo
+
+The application is deployed on GitHub Pages at: [https://yourusername.github.io/combined-algorithms-visualizer/](https://yourusername.github.io/combined-algorithms-visualizer/)
+
+## Features
+
+### Maxflow Algorithm Visualizer
+- Interactive network graph creation
+- Step-by-step visualization of maximum flow algorithms
+- Multiple algorithm implementations
+- Detailed explanation of each step
+
+### Matching Algorithm Visualizer
+- Visualization of various matching algorithms
+- Interactive examples
+- Performance metrics
+
+### Teacher Substitution App
+- Manage teacher substitutions
+- Schedule visualization
+- Conflict resolution
+
+## Getting Started
+
+### Prerequisites
+- Node.js (v14 or higher)
+- npm (v6 or higher)
+
+### Installation
+
+1. Clone the repository:
+   ```
+   git clone https://github.com/yourusername/combined-algorithms-visualizer.git
+   ```
+
+2. Install dependencies:
+   ```
+   cd combined-algorithms-visualizer
+   npm install
+   cd maxflow
+   npm install
+   ```
+
+3. Start the development server:
+   ```
+   npm start
+   ```
+
+This will launch all applications on different ports:
+- Main application: http://localhost:3000
+- Maxflow visualizer: http://localhost:3001
+- Matching algorithm: http://localhost:3002
+- Teacher app: http://localhost:3003
+
+## Project Structure
 
 ```
 combined-algorithms-visualizer/
-├── css/              # 首页样式文件
-├── js/               # 首页JavaScript文件
-├── img/              # 首页图片资源
-├── scripts/          # 构建脚本
-├── matching-algorithm/ # 匹配算法可视化项目 (构建后)
-└── maxflow/          # 最大流算法可视化项目 (构建后)
+├── maxflow/                # Maxflow algorithm visualization
+├── matching-algorithm/     # Matching algorithm visualization
+├── teacher-app/            # Teacher substitution application
+├── css/                    # Shared CSS files
+├── scripts/                # Build and utility scripts
+└── README.md
 ```
 
-## 安装和运行
+## Building for Production
 
-### 开发环境
+To build all applications for production:
 
-1. 安装依赖:
-```
-npm install
-```
-
-2. 启动开发服务器:
-```
-npm start
-```
-这将同时启动静态服务器和最大流项目的开发服务器。
-
-### 构建项目
-
-构建整个项目，为静态网站部署做准备：
 ```
 npm run build
 ```
 
-构建完成后，整个项目将准备好部署到任何静态网站托管服务（如GitHub Pages）。
+This builds each individual application and combines them into the main directory structure.
 
-## 如何使用
+## Technologies Used
 
-1. 打开首页后，您可以选择要使用的算法可视化工具
-2. 点击相应的卡片进入对应的可视化工具
-3. 每个工具都有自己的使用说明和交互方式
+- React.js
+- TypeScript
+- Cytoscape.js
+- SASS/SCSS
+- Webpack
 
-## 包含的项目
+## Contributing
 
-- 匹配算法可视化 - 用于展示和学习二分图匹配算法 
-- 最大流算法可视化 - 用于展示和学习网络流算法
+Contributions are welcome! Please feel free to submit a Pull Request.
 
-## 许可证
+## License
 
-MIT 
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+## Acknowledgments
+
+- Thanks to all contributors who have helped with the development of these visualization tools
+- Special thanks to the academic advisors who provided guidance on the algorithm implementations
