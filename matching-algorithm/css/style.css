@@ -1,0 +1,520 @@
+/********************
+***** Interface *****
+********************/
+:root {
+  --primary: #6200EA;
+  --primary-light: #9d46ff;
+  --secondary: #00E5FF;
+  --secondary-light: #18ffff;
+  --background: #121212;
+  --surface: #1E1E1E;
+  --surface-light: #2d2d2d;
+  --text-primary: #FFFFFF;
+  --text-secondary: #B0B0B0;
+  --accent: #FF4081;
+  --error: #CF6679;
+  --success: #03DAC6;
+  
+  --border-radius: 8px;
+  --shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+  --transition: all 0.3s ease;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--text-primary);
+  font-family: 'Roboto', sans-serif;
+  background-image: radial-gradient(circle at 50% 50%, #1a1a1a 0%, var(--background) 100%);
+}
+
+h1, h2, h3 {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 600;
+}
+
+h1 {
+  font-size: 2.5rem;
+}
+
+#title h1 {
+  font-size: 1.8rem;
+}
+
+ol {
+  margin: 0px;
+  list-style-type: decimal;
+  padding-left: 2rem;
+}
+
+ol li {
+  background-color: var(--surface);
+  padding: 8px 12px;
+  margin-bottom: 4px;
+  border-left: 3px solid var(--primary);
+  border-radius: 0 4px 4px 0;
+  transition: var(--transition);
+}
+
+ol li.active {
+  background-color: rgba(98, 0, 234, 0.3);
+  border-left-color: var(--accent);
+}
+
+.row {
+  padding: 0px 10px;
+}
+
+.fixed-action-btn {
+  top: 20px;
+  height: 60px;
+}
+
+.fixed-action-btn a.btn-floating {
+  background-color: var(--primary);
+  box-shadow: var(--shadow);
+}
+
+.fixed-action-btn ul li a.btn-floating {
+  opacity: 0.9;
+}
+
+.fixed-action-btn a.btn-floating:hover {
+  background-color: var(--primary-light);
+}
+
+.fixed-action-btn a.btn-floating.red {
+  background-color: var(--error);
+}
+
+.fixed-action-btn a.btn-floating.yellow {
+  background-color: var(--secondary);
+}
+
+.fixed-action-btn a.btn-floating.green {
+  background-color: var(--success);
+}
+
+.btn, a.btn, button.btn {
+  background-color: var(--primary);
+  color: var(--text-primary);
+  border-radius: var(--border-radius);
+  text-transform: uppercase;
+  font-weight: 500;
+  box-shadow: var(--shadow);
+  transition: var(--transition);
+}
+
+.btn:hover, a.btn:hover, button.btn:hover {
+  background-color: var(--primary-light);
+}
+
+.btn.red, a.btn.red, button.btn.red {
+  background-color: var(--error);
+}
+
+.btn-floating i {
+  line-height: inherit;
+}
+
+#content {
+  padding: 20px;
+  padding-bottom: 0px;
+  margin-bottom: 0px;
+}
+
+#title {
+  height: 60px;
+  margin: 0px 50px;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+}
+
+#title img {
+  padding-top: 20px;
+  margin-right: 20px;
+  width: 80px;
+  opacity: 0.15;
+  filter: alpha(opacity=15);
+}
+
+#home-button {
+  margin-left: 20px;
+  margin-right: 20px;
+  font-size: 0.9rem;
+  padding: 0 15px;
+  height: 36px;
+  line-height: 36px;
+  background-color: var(--secondary);
+}
+
+.card-panel {
+  background-color: var(--surface);
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow);
+  margin: 0.5rem 0 1rem 0;
+  padding: 1.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+#graph-panel, #execution-panel, #pseudocode-panel, #variables-panel {
+  margin: 0px 0 0.5rem 0;
+  padding: 1.2rem;
+}
+
+#execution-trace, #pseudocode-long, #pseudocode-short {
+  background-color: var(--surface-light);
+  font-family: 'Fira Code', monospace;
+  font-size: 14px;
+  overflow-y: auto;
+  margin-top: 10px;
+  padding: 12px;
+  border-radius: var(--border-radius);
+  border-left: 3px solid var(--secondary);
+  max-height: 400px;
+}
+
+#pseudocode-tab {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#details-button {
+  color: var(--text-primary);
+  background-color: var(--surface-light);
+}
+
+.variables {
+  overflow-y: auto;
+  margin-top: 10px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  background-color: var(--surface-light);
+  padding: 12px;
+  border-radius: var(--border-radius);
+}
+
+.variables span {
+  margin: 6px 0;
+  font-family: 'Fira Code', monospace;
+}
+
+#blossom {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
+
+
+/*****************
+***** Modals *****
+*****************/
+.modal, .modal .modal-content {
+  background-color: var(--surface);
+  color: var(--text-primary);
+  text-align: center;
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.bottom-sheet .modal-content p {
+  margin-top: 0px;
+}
+
+.file-field {
+  max-width: 320px;
+  margin : 0 auto;
+}
+
+.carousel-item {
+  padding-top: 20px;
+  color: var(--text-primary);
+}
+
+.carousel-item.teal {
+  background-color: var(--primary) !important;
+}
+
+.carousel-item.cyan {
+  background-color: var(--secondary) !important;
+}
+
+.carousel-item.blue-grey {
+  background-color: var(--surface-light) !important;
+}
+
+.carousel-item.blue {
+  background-color: var(--primary-light) !important;
+}
+
+#help-modal .modal-content {
+  padding: 0px;
+}
+
+#import-modal .file-path {
+  font-family: 'Roboto', sans-serif;
+  color: var(--text-primary);
+  background-color: var(--surface-light);
+}
+
+#help-bipartite-graph img, #help-augmenting-path img {
+  width: 120px;
+}
+
+#capacity-modal {
+  max-width: 200px;
+  margin: 0px;
+}
+
+#capacity-number {
+  margin: 0 10px;
+}
+
+#random-modal, #random-modal {
+  max-width: 260px;
+  margin: 0px;
+}
+
+#help-random-modal {
+  max-width: 280px;
+  margin: 0px;
+}
+
+#welcome-modal, #algorithm-modal, #help-modal {
+  transform: translateY(-50%) !important
+}
+
+#welcome-row, #help-controls-row, #help-bipartite-row, #help-augmenting-row, #help-tools-row {
+  padding-top: 20px;
+}
+
+#help-bipartite-row p, #help-augmenting-row p {
+  font-size: 12px;
+}
+
+#help-tools-row p {
+  text-align: left;
+}
+
+#welcome-modal img, #help-controls-row img {
+  height: 100px;
+}
+
+#welcome-modal p {
+  font-size: 14px;
+}
+
+#welcome-modal .grey-text, #help-controls-row .teal-text {
+  font-size: 12px;
+  color: var(--text-secondary) !important;
+}
+
+#welcome-algorithms a {
+  padding: 16px;
+  height: 132px;
+  margin: 16px;
+  transition: var(--transition);
+}
+
+#welcome-algorithms a.teal {
+  background-color: var(--primary) !important;
+}
+
+#welcome-algorithms a.blue-grey {
+  background-color: var(--surface-light) !important;
+}
+
+#welcome-algorithms a.blue {
+  background-color: var(--secondary) !important;
+}
+
+#welcome-modal #welcome-logo {
+  height: 32px;
+  margin: 6px 0px 20px 10px;
+}
+
+#welcome-header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#author {
+  margin: -20px 0px 10px 0px;
+}
+
+#author .grey-text {
+  font-size: 11px;
+  color: var(--text-secondary) !important;
+}
+
+#swipe-text {
+  position: absolute;
+  width: 100%;
+  text-align: center;
+  bottom: 16px;
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+#swipe-text i {
+  position: relative;
+  top: 3px;
+}
+
+#close-help {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  cursor: pointer;
+  color: var(--text-primary);
+}
+
+#control-panel {
+  margin: 0px;
+}
+
+#graph-controls {
+  margin-top: 10px;
+  display: flex;
+  justify-content: space-between;
+}
+
+#controls {
+  margin-bottom: 0px;
+  text-align: center;
+}
+
+#controls i {
+  background-color: var(--surface-light);
+  color: var(--text-primary);
+}
+
+#progress, #progress-bar, #speed, #speed-bar {
+  margin: 5px 0px;
+}
+
+#speed-bar {
+  margin-top: 13px;
+}
+
+/* Custom styling for range inputs */
+input[type=range] {
+  -webkit-appearance: none;
+  height: 4px;
+  background: var(--surface-light);
+  border-radius: 2px;
+  margin: 10px 0;
+}
+
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--secondary);
+  cursor: pointer;
+}
+
+svg {
+  display: block;
+  margin: auto;
+}
+
+.vertex:hover {
+  cursor: pointer;
+}
+
+.vertex text {
+  font-family: sans-serif;
+  text-anchor: middle;
+  dominant-baseline: central;
+  pointer-events: none;
+  user-select: none;
+}
+
+.vertex, .edge {
+  transition: fill 0.3s, stroke 0.3s;
+}
+
+.edge {
+  fill: none;
+  stroke: #ccc;
+  stroke-width: 3;
+}
+
+.drag-line {
+  stroke-width: 2;
+  stroke: var(--accent);
+  pointer-events: none;
+}
+
+.drag-line.hidden {
+  stroke-width: 0;
+}
+
+#draw-text, #graph, #capacity-modal, #random-modal, #help-random-modal, #help-modal, #welcome-modal {
+  user-select: none;
+}
+
+/* Custom styling for tooltips */
+.material-tooltip {
+  background-color: var(--surface);
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow);
+}
+
+.backdrop {
+  background-color: transparent;
+}
+
+/* Radio buttons and checkboxes */
+[type="radio"]:checked+span:after, 
+[type="radio"].with-gap:checked+span:after {
+  background-color: var(--secondary);
+}
+
+[type="radio"]:checked+span:after, 
+[type="radio"].with-gap:checked+span:before, 
+[type="radio"].with-gap:checked+span:after {
+  border: 2px solid var(--secondary);
+}
+
+[type="checkbox"]:checked+span:not(.lever):before {
+  border-right: 2px solid var(--secondary);
+  border-bottom: 2px solid var(--secondary);
+}
+
+/* Style for circle buttons in modals */
+.circle.waves-effect.waves-light.material-icons {
+  background-color: var(--primary);
+  color: var(--text-primary);
+  transition: var(--transition);
+}
+
+.circle.waves-effect.waves-light.material-icons:hover {
+  background-color: var(--primary-light);
+}
+
+/* Style for focused input */
+input:focus {
+  border-bottom: 1px solid var(--secondary) !important;
+  box-shadow: 0 1px 0 0 var(--secondary) !important;
+}
+
+/* Style for pulse effect */
+.btn-floating.pulse::before {
+  background-color: rgba(255, 255, 255, 0.3);
+}
+
+#algorithm-modal span {
+  font-size: 0.9rem;
+}
+
+#algorithm-modal p {
+  margin: 8px 0;
+}

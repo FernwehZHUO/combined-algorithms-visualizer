@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <!-- Meta -->
+    <meta charset="UTF-8" />
+
+    <!-- Title -->
+    <title>
+        MAV - Matching Algorithm Visualiser
+    </title>
+
+    <!-- Styles -->
+    <link type="text/css" rel="stylesheet" href="css/style.css" />
+    <link type="text/css" rel="stylesheet" href="css/materialize.min.css" />
+    <link type="text/css" rel="stylesheet" href="css/material-icons.css" />
+    <link type="text/css" rel="stylesheet" href="css/fonts.css" />
+    <link rel="icon" href="img/mav-icon.png">
+
+    <!-- Scripts -->
+    <script type="text/javascript" src="js/jquery-3.4.1.min.js"></script>
+    <script type="text/javascript" src="js/materialize.min.js"></script>
+    <script type="text/javascript" src="js/d3.min.js"></script>
+</head>
+
+<body>
+    <!-- Title -->
+    <div id="title">
+        <img src="img/mav-logo.png" />
+        <a href="http://localhost:3000/" id="home-button" class="waves-effect waves-light btn">
+            <i class="material-icons left">home</i>Home
+        </a>
+        <h1>One-to-one bipartite graph matching</h1>
+    </div>
+
+    <!-- Welcome modal -->
+    <div id="welcome-modal" class="modal">
+        <div class="modal-content">
+            <div id="welcome-header">
+                <h2>Welcome to Matching Algorithm Visualizer </h2>
+            </div>
+            <div id="author">
+                <span class="grey-text">Matching Algorithm Visualizer</span>
+            </div>
+            <div id="welcome-controls">
+                <div class="row" id="welcome-row">
+                    <div class="col s3">
+                        <img src="img/mouse-left-click.png" />
+                        <p>
+                            <span class="grey-text">Left-click</span><br />
+                            Add vertex + <br />
+                            Set capacity
+                        </p>
+                    </div>
+                    <div class="col s3">
+                        <img src="img/mouse-drag.png" />
+                        <p>
+                            <span class="grey-text">Click-and-drag</span><br />
+                            Add edge
+                        </p>
+                    </div>
+                    <div class="col s3">
+                        <img src="img/mouse-right-click.png" />
+                        <p>
+                            <span class="grey-text">Right-click</span><br />
+                            Remove vertex/edge
+                        </p>
+                    </div>
+                    <div class="col s3">
+                        <img src="img/mouse-ctrl.png" />
+                        <p>
+                            <span class="grey-text">Ctrl + Click-and-drag</span><br />
+                            Move vertex
+                        </p>
+                    </div>
+                </div>
+                <a class="waves-effect waves-light btn" id="start-btn">Start</a>
+            </div>
+            <div id="welcome-algorithms" hidden>
+                <a class="modal-close waves-effect waves-light teal tooltipped btn" data-position="bottom"
+                    data-tooltip="One-to-one bipartite graph matching" id="one-to-one-btn"><img
+                        src="img/one-to-one.png" /></a>
+                <a class="modal-close waves-effect waves-light blue-grey tooltipped btn" data-position="bottom"
+                    data-tooltip="Many-to-many bipartite graph matching" id="many-to-many-btn"><img
+                        src="img/many-to-many.png" /></a>
+                <a class="modal-close waves-effect waves-light blue tooltipped btn" data-position="bottom"
+                    data-tooltip="General graph matching" id="general-graph-btn"><img src="img/general-graph.png" /></a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Menu (Import data, Export data, Select algorithm, Help) -->
+    <div class="fixed-action-btn" id="menu-btn">
+        <a class="waves-effect waves-light btn-floating btn-large pulse teal">
+            <i class="large material-icons">more_horiz</i>
+        </a>
+        <ul>
+            <li><a class="btn-floating red tooltipped modal-trigger" data-position="bottom" data-tooltip="Import data"
+                    href="#import-modal"><i class="material-icons">file_upload</i></a></li>
+            <li><a class="btn-floating yellow darken-1 tooltipped modal-trigger" id="export-trigger"
+                    data-position="bottom" data-tooltip="Export data" href="#export-modal"><i
+                        class="material-icons">file_download</i></a></li>
+            <li><a class="btn-floating green tooltipped modal-trigger" data-position="bottom"
+                    data-tooltip="Select algorithm" href="#algorithm-modal"><i class="material-icons">list</i></a></li>
+            <li><a class="btn-floating brown tooltipped" data-position="bottom" data-tooltip="Fullscreen"
+                    id="fullscreen-button"><i class="material-icons">fullscreen</i></a></li>
+            <li><a class="btn-floating blue tooltipped modal-trigger" data-position="bottom" data-tooltip="Help"
+                    href="#help-modal"><i class="material-icons">help</i></a></li>
+        </ul>
+    </div>
+
+    <!-- Import data modal -->
+    <div id="import-modal" class="modal bottom-sheet">
+        <div class="modal-content">
+            <p>Select graph data from your local system.</p>
+            <div class="file-field input-field">
+                <div class="btn blue">
+                    <span><i class="material-icons">insert_drive_file</i></span>
+                    <input type="file" id="import-data" accept=".txt, .json" />
+                </div>
+                <div class="file-path-wrapper">
+                    <input class="file-path validate white-text" id="import-text" type="text"
+                        placeholder="Upload .txt or .json graph data file" />
+                </div>
+            </div>
+            <p class="red-text" id="file-error" hidden>
+                Error reading file. Please upload a valid file for <span id="error-type">one-to-one bipartite graph
+                    matching</span>.
+            </p>
+            <a class="waves-effect waves-light btn disabled" id="import-btn">Confirm</a>
+            <a class="modal-close waves-effect waves-light btn red" id="import-close">Cancel</a>
+        </div>
+    </div>
+
+    <!-- Export data modal -->
+    <div id="export-modal" class="modal bottom-sheet">
+        <div class="modal-content">
+            <p>Select file format to export current graph</p>
+            <p id="format-selects">
+                <label>
+                    <input name="format-select" id="txt-select" type="radio" />
+                    <span>TXT</span>
+                </label>
+                &nbsp;
+                <label>
+                    <input name="format-select" id="json-select" type="radio" />
+                    <span>JSON</span>
+                </label>
+            </p>
+            <a class="modal-close waves-effect waves-light btn" id="export-btn">Confirm</a>
+            <a class="modal-close waves-effect waves-light btn red" id="export-close">Cancel</a>
+        </div>
+    </div>
+
+    <!-- Algorithm selection modal -->
+    <div id="algorithm-modal" class="modal">
+        <div class="modal-content">
+            <h7>Select algorithm</h7>
+            <p>
+                <label>
+                    <input name="algorithm-select" id="algorithm1" type="radio" />
+                    <span>One-to-one bipartite graph matching</span>
+                </label>
+            </p>
+            <p>
+                <label>
+                    <input name="algorithm-select" id="algorithm2" type="radio" />
+                    <span>Many-to-many bipartite graph matching</span>
+                </label>
+            </p>
+            <p>
+                <label>
+                    <input name="algorithm-select" id="algorithm3" type="radio" />
+                    <span>General graph matching</span>
+                </label>
+            </p>
+            <a class="modal-close waves-effect waves-light btn" id="algorithm-btn">Confirm</a>
+            <a class="modal-close waves-effect waves-light btn red" id="algorithm-close">Cancel</a>
+        </div>
+    </div>
+
+    <!-- Help modal -->
+    <div id="help-modal" class="modal">
+        <div class="modal-content">
+            <div class="carousel carousel-slider center">
+                <!-- Controls help panel -->
+                <div class="carousel-item teal white-text">
+                    <h3>Controls</h3>
+                    <div class="row" id="help-controls-row">
+                        <div class="col s3">
+                            <img src="img/mouse-left-click.png" />
+                            <p>
+                                <span class="teal-text text-lighten-4">Left-click</span><br />
+                                Add vertex + <br />
+                                Set capacity
+                            </p>
+                        </div>
+                        <div class="col s3">
+                            <img src="img/mouse-drag.png" />
+                            <p>
+                                <span class="teal-text text-lighten-4">Click-and-drag</span><br />
+                                Add edge
+                            </p>
+                        </div>
+                        <div class="col s3">
+                            <img src="img/mouse-right-click.png" />
+                            <p>
+                                <span class="teal-text text-lighten-4">Right-click</span><br />
+                                Remove vertex/edge
+                            </p>
+                        </div>
+                        <div class="col s3">
+                            <img src="img/mouse-ctrl.png" />
+                            <p>
+                                <span class="teal-text text-lighten-4">Ctrl + Click-and-drag</span><br />
+                                Move vertex
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tools help panel -->
+                <div class="carousel-item cyan white-text" id="help-tools">
+                    <h3>Tools</h3>
+                    <span>(This panel is interactive)</span>
+                    <div class="row" id="help-tools-row">
+                        <div class="col s1"></div>
+                        <div class="col s5">
+                            <p><a class="waves-effect waves-light blue btn-floating" id="help-play-button"><i
+                                        class="material-icons">play_arrow</i></a> <span id="help-play-text">Start animation</span></p>
+                            <p><a class="waves-effect waves-light btn-floating"><i class="material-icons">check</i></a>
+                                Reposition nodes</p>
+                            <p><a class="waves-effect waves-light red btn-floating"><i
+                                        class="material-icons">clear</i></a> Clear graph</p>
+                        </div>
+                        <div class="col s6">
+                            <p><a class="waves-effect waves-light red btn-floating" id="help-edit-button"><i
+                                        class="material-icons">stop</i></a> <span id="help-edit-text">Edit graph</span>
+                            </p>
+                            <p><a class="waves-effect waves-light blue-grey btn-floating" id="help-random-button"><i
+                                        class="material-icons">shuffle</i></a> Random (right-click: custom)</p>
+                            <p><a class="waves-effect waves-light grey darken-1 btn-floating"
+                                    id="help-details-button"><i class="material-icons black-text">unfold_less</i></a>
+                                <span id="help-details-text">Less detailed animation</span></p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bipartite graph help panel -->
+                <div class="carousel-item blue-grey white-text" id="help-bipartite-graph">
+                    <h3>Bipartite graph</h3>
+                    <div class="row" id="help-bipartite-row">
+                        <div class="col s5">
+                            <img src="img/bipartite-graph.png" />
+                        </div>
+                        <div class="col s6">
+                            <p>A <b>bipartite graph</b> is a graph that can be partitioned into two sides so that every
+                                edge joins a vertex from one side to the other.</p>
+                            <p>A <b>matching</b> satisfies the property that each vertex is incident to a number of
+                                edges limited by its capacity.</p>
+                            <p>A <b>maximum matching</b> in the graph is a matching that contains the largest number of
+                                edges.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Augmenting path help panel -->
+                <div class="carousel-item blue white-text" id="help-augmenting-path">
+                    <h3>Augmenting path</h3>
+                    <div class="row" id="help-augmenting-row">
+                        <div class="col s5">
+                            <img src="img/augmenting-path.png" />
+                        </div>
+                        <div class="col s6">
+                            <p>An vertex is <b>exposed</b> if it is not matched.</p>
+                            <p>An <b>alternating path</b> is a path that comprises of edges in a matching and edges not
+                                in the matching alternately.</p>
+                            <p>An <b>augmenting path</b> is an alternating path which starts and ends at exposed
+                                vertices.</p>
+                            <p><b>Theorem:</b> A matching is of maximum cardinality if and only if it admits no
+                                augmenting path.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <i id="close-help" class="modal-close material-icons">clear</i>
+            <span id="swipe-text">Swipe&nbsp;<i class="material-icons tiny">swap_horiz</i></span>
+        </div>
+    </div>
+
+    <!-- Random graph generation help modal -->
+    <div id="help-random-modal" class="modal">
+        <div class="modal-content">
+            <h7>Number of vertices</h7>
+            <div class="row">
+                <div class="col s6">
+                    <label>Left</label>
+                    <div>
+                        <a><i class="circle waves-effect waves-light material-icons white-text"
+                                id="help-left-minus">remove</i></a>
+                        <span id="help-left-number">5</span>
+                        <a><i class="circle waves-effect waves-light material-icons white-text"
+                                id="help-left-plus">add</i></a>
+                    </div>
+                </div>
+                <div class="col s6">
+                    <label>Right</label>
+                    <div>
+                        <a><i class="circle waves-effect waves-light material-icons white-text"
+                                id="help-right-minus">remove</i></a>
+                        <span id="help-right-number">5</span>
+                        <a><i class="circle waves-effect waves-light material-icons white-text"
+                                id="help-right-plus">add</i></a>
+                    </div>
+                </div>
+            </div>
+            <h7>Probability of edge</h7>
+            <p>
+                <a><i class="circle waves-effect waves-light material-icons white-text"
+                        id="help-probability-minus">remove</i></a>
+                <span id="help-probability-number">0.5</span>
+                <a><i class="circle waves-effect waves-light material-icons white-text"
+                        id="help-probability-plus">add</i></a>
+            </p>
+            <a class="modal-close waves-effect waves-light btn"><i class="material-icons">check</i></a>
+        </div>
+    </div>
+
+    <!-- Content (Pseudocode, Graph, Controls, Execution trace, Variables) -->
+    <div class="row" id="content">
+        <!-- Pseudocode -->
+        <div class="col s4">
+            <div class="card-panel" id="pseudocode-panel">
+                <div id="pseudocode-tab">
+                    <span>
+                        <i class="material-icons">code</i>
+                        <h7>Pseudocode</h7>
+                    </span>
+                    <a><i class="circle waves-effect waves-light material-icons grey darken-1 tooltipped"
+                            data-position="left" data-tooltip="Less details" id="details-button">unfold_less</i></a>
+                </div>
+
+                <!-- Long version of pseudocode -->
+                <div id="pseudocode-long">
+                    <!-- Ordered list populated based on selected algorithm -->
+                    <ol></ol>
+                </div>
+
+                <!-- Short version of pseudocode -->
+                <div id="pseudocode-short" hidden>
+                    <!-- Ordered list populated based on selected algorithm -->
+                    <ol></ol>
+                </div>
+            </div>
+        </div>
+
+        <!-- Graph and controls -->
+        <div class="col s4">
+            <!-- Graph -->
+            <div class="row">
+                <div class="card-panel" id="graph-panel">
+                    <i class="material-icons">share</i>
+                    <h7>Graph</h7>
+                    <svg id="graph"></svg>
+                </div>
+            </div>
+
+            <!-- Capacity input modal for many-to-many bipartite graph matching -->
+            <div id="capacity-modal" class="modal">
+                <div class="modal-content">
+                    <h7>Enter capacity</h7>
+                    <p>
+                        <a><i class="circle waves-effect waves-light material-icons white-text"
+                                id="capacity-minus">remove</i></a>
+                        <span id="capacity-number">1</span>
+                        <a><i class="circle waves-effect waves-light material-icons white-text"
+                                id="capacity-plus">add</i></a>
+                    </p>
+                    <a class="modal-close waves-effect waves-light btn" id="capacity-btn"><i
+                            class="material-icons">check</i></a>
+                </div>
+            </div>
+
+            <!-- Controls -->
+            <div class="row" id=control-panel>
+                <!-- Graph controls for editing graph (Run algorithm, Position nodes, Clear graph, Generate random graph) -->
+                <div id="graph-controls">
+                    <a class="waves-effect waves-light blue btn-floating tooltipped disabled" data-position="top"
+                        data-tooltip="Run algorithm" id="run-algorithm"><i class="material-icons">play_arrow</i></a>
+                    <a class="waves-effect waves-light btn-floating tooltipped" data-position="top"
+                        data-tooltip="Position nodes" id="position-nodes"><i class="material-icons">check</i></a>
+                    <a class="waves-effect waves-light red btn-floating tooltipped" data-position="top"
+                        data-tooltip="Clear graph" id="clear-graph"><i class="material-icons">clear</i></a>
+                    <a class="waves-effect waves-light blue-grey btn-floating tooltipped" data-position="top"
+                        data-tooltip="Random graph" id="random-graph"><i class="material-icons">shuffle</i></a>
+                </div>
+
+                <!-- Random graph settings modal -->
+                <div id="random-modal" class="modal">
+                    <div class="modal-content">
+                        <h7>Number of vertices</h7>
+                        <div class="row" id="random-bipartite-vertices">
+                            <div class="col s6">
+                                <label>Left</label>
+                                <div>
+                                    <a><i class="circle waves-effect waves-light material-icons white-text"
+                                            id="left-minus">remove</i></a>
+                                    <span id="left-number">5</span>
+                                    <a><i class="circle waves-effect waves-light material-icons white-text"
+                                            id="left-plus">add</i></a>
+                                </div>
+                            </div>
+                            <div class="col s6">
+                                <label>Right</label>
+                                <div>
+                                    <a><i class="circle waves-effect waves-light material-icons white-text"
+                                            id="right-minus">remove</i></a>
+                                    <span id="right-number">5</span>
+                                    <a><i class="circle waves-effect waves-light material-icons white-text"
+                                            id="right-plus">add</i></a>
+                                </div>
+                            </div>
+                        </div>
+                        <p id="random-general-vertices" hidden>
+                            <a><i class="circle waves-effect waves-light material-icons white-text"
+                                    id="vertices-minus">remove</i></a>
+                            <span id="vertices-number">10</span>
+                            <a><i class="circle waves-effect waves-light material-icons white-text"
+                                    id="vertices-plus">add</i></a>
+                        </p>
+                        <div id="random-capacity" hidden>
+                            <h7>Capacity</h7>
+                            <div class="row">
+                                <div class="col s6">
+                                    <label>Min</label>
+                                    <div>
+                                        <a><i class="circle waves-effect waves-light material-icons white-text"
+                                                id="capacity-min-minus">remove</i></a>
+                                        <span id="capacity-min-number">1</span>
+                                        <a><i class="circle waves-effect waves-light material-icons white-text"
+                                                id="capacity-min-plus">add</i></a>
+                                    </div>
+                                </div>
+                                <div class="col s6">
+                                    <label>Max</label>
+                                    <div>
+                                        <a><i class="circle waves-effect waves-light material-icons white-text"
+                                                id="capacity-max-minus">remove</i></a>
+                                        <span id="capacity-max-number">5</span>
+                                        <a><i class="circle waves-effect waves-light material-icons white-text"
+                                                id="capacity-max-plus">add</i></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <h7>Probability of edge</h7>
+                        <p>
+                            <a><i class="circle waves-effect waves-light material-icons white-text"
+                                    id="probability-minus">remove</i></a>
+                            <span id="probability-number">0.5</span>
+                            <a><i class="circle waves-effect waves-light material-icons white-text"
+                                    id="probability-plus">add</i></a>
+                        </p>
+                        <a class="modal-close waves-effect waves-light btn" id="random-btn"><i
+                                class="material-icons">check</i></a>
+                    </div>
+                </div>
+
+                <!-- Algorithm playback controls (Step slider, Speed slider, Slower, Faster, Stop, Play/Pause, Previous, Next) -->
+                <div id="algorithm-controls" hidden>
+                    <label>Step</label>
+                    <p class="range-field" id="progress">
+                        <input type="range" id="progress-bar" min="0" max="100" value="0" />
+                    </p>
+                    <div class="row" id="controls">
+                        <a class="red"><i class="circle waves-effect waves-light material-icons tooltipped"
+                                data-position="top" data-tooltip="Stop" id="stop-button">stop</i></a>
+                        <a><i class="circle waves-effect waves-light material-icons tooltipped" data-position="top"
+                                data-tooltip="Previous" id="previous-button">skip_previous</i></a>
+                        <a><i class="circle waves-effect waves-light material-icons tooltipped" data-position="top"
+                                data-tooltip="Slower" id="slower-button">fast_rewind</i></a>
+                        <a><i class="circle waves-effect waves-light material-icons tooltipped" data-position="top"
+                                data-tooltip="Play" id="play-button">play_arrow</i></a>
+                        <a><i class="circle waves-effect waves-light material-icons tooltipped" data-position="top"
+                                data-tooltip="Faster" id="faster-button">fast_forward</i></a>
+                        <a><i class="circle waves-effect waves-light material-icons tooltipped" data-position="top"
+                                data-tooltip="Next" id="next-button">skip_next</i></a>
+                        <br />
+                        <div>
+                            <label>Speed</label>
+                            <p class="range-field" id="speed">
+                                <input type="range" id="speed-bar" min="1" max="10" />
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Execution trace and variables -->
+        <div class="col s4">
+            <!-- Execution trace -->
+            <div class="row">
+                <div class="card-panel" id="execution-panel">
+                    <i class="material-icons">playlist_play</i>
+                    <h7>Execution trace</h7>
+                    <div id="execution-trace">
+                        <!-- Ordered list populated based on algorithm step -->
+                        <ol></ol>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Variables -->
+            <div class="row">
+                <div class="card-panel" id="variables-panel">
+                    <i class="material-icons">format_list_bulleted</i>
+                    <h7>Variables</h7>
+                    <!-- Variables updated as algorithm runs -->
+                    <div class="variables" id="bipartite-variables">
+                        <span>Q = [ <span id="q"></span> ]</span>
+                        <span>u = <span id="u">null</span></span>
+                        <span>v = <span id="v">null</span></span>
+                        <span>w = <span id="w">null</span></span>
+                        <span>Matching size = <span id="bipartite-matching">0</span></span>
+                    </div>
+                    <div class="variables" id="general-variables">
+                        <span>p = { <span id="p"></span> }</span>
+                        <span>Matching size = <span id="general-matching">0</span></span>
+                        <div id="blossom"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/animation.js"></script>
+    <script src="js/algorithm1.js"></script>
+    <script src="js/algorithm2.js"></script>
+    <script src="js/algorithm3.js"></script>
+    <script src="js/graph.js"></script>
+    <script src="js/interface.js"></script>
+</body>
+
+</html>

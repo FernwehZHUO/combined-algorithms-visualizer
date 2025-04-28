@@ -2,10 +2,6 @@
 node_modules/
 /package-lock.json
 
-# 构建文件
-/matching-algorithm/
-/maxflow/
-
 # 开发环境
 .env
 .env.local

@@ -1,0 +1,6 @@
+This is a placeholder for the scheduler-logo.png and scheduler-icon.png files.
+In a real application, you would need to create these image files.
+
+For now, you can use one of the existing images from the original project:
+- Copy mav-logo.png to scheduler-logo.png
+- Copy mav-icon.png to scheduler-icon.png 

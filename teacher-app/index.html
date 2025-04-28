@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <!-- Meta -->
+    <meta charset="UTF-8" />
+
+    <!-- Title -->
+    <title>
+        Teacher Substitution Scheduler - Maximum Matching Application
+    </title>
+
+    <!-- Styles -->
+    <link type="text/css" rel="stylesheet" href="css/style.css" />
+    <link type="text/css" rel="stylesheet" href="css/materialize.min.css" />
+    <link type="text/css" rel="stylesheet" href="css/material-icons.css" />
+    <link type="text/css" rel="stylesheet" href="css/fonts.css" />
+    <link rel="icon" href="img/scheduler-icon.png">
+
+    <!-- Scripts -->
+    <script type="text/javascript" src="js/jquery-3.4.1.min.js"></script>
+    <script type="text/javascript" src="js/materialize.min.js"></script>
+    <script type="text/javascript" src="js/d3.min.js"></script>
+    <script type="text/javascript" src="js/graph.js"></script>
+    <script type="text/javascript" src="js/algorithm.js"></script>
+    <script type="text/javascript" src="js/teacherSub.js"></script>
+    <script type="text/javascript" src="js/interface.js"></script>
+</head>
+
+<body>
+    <!-- Title -->
+    <div id="title">
+        <img src="img/scheduler-logo.png" />
+        <h1>Teacher Substitution Scheduler</h1>
+        <p class="grey-text">Based on maximum bipartite matching algorithms</p>
+    </div>
+
+    <!-- Welcome modal -->
+    <div id="welcome-modal" class="modal">
+        <div class="modal-content">
+            <div id="welcome-header">
+                <h2>Welcome to Teacher Substitution Scheduler</h2>
+            </div>
+            <div id="author">
+                <span class="grey-text">A specialized application of matching algorithms</span>
+            </div>
+            <div class="row">
+                <div class="col s12">
+                    <p>This application helps schools schedule substitute teachers when regular teachers are absent. It uses the maximum bipartite matching algorithm to find the optimal assignment of available teachers to classes.</p>
+                    <p>You can:</p>
+                    <ul>
+                        <li>Add available substitute teachers</li>
+                        <li>Add classes needing substitutes</li>
+                        <li>Specify which teachers can teach which classes</li>
+                        <li>Run the matching algorithm to get the optimal assignments</li>
+                    </ul>
+                </div>
+            </div>
+            <a class="waves-effect waves-light btn" id="start-btn">Start</a>
+        </div>
+    </div>
+
+    <!-- Import data modal -->
+    <div id="import-modal" class="modal bottom-sheet">
+        <div class="modal-content">
+            <p>Select teacher substitution data from your local system.</p>
+            <div class="file-field input-field">
+                <div class="btn blue">
+                    <span><i class="material-icons">insert_drive_file</i></span>
+                    <input type="file" id="import-data" accept=".csv" />
+                </div>
+                <div class="file-path-wrapper">
+                    <input class="file-path validate white-text" id="import-text" type="text"
+                        placeholder="Upload .csv data file" />
+                </div>
+            </div>
+            <p class="helper-text">You can click the Export button to get a properly formatted CSV file for reference.</p>
+            <p class="red-text" id="file-error" hidden>
+                Error reading file. Please upload a valid file.
+            </p>
+            <a class="waves-effect waves-light btn disabled" id="import-btn">Confirm</a>
+            <a class="modal-close waves-effect waves-light btn red" id="import-close">Cancel</a>
+        </div>
+    </div>
+
+    <!-- Export data modal -->
+    <div id="export-modal" class="modal bottom-sheet">
+        <div class="modal-content">
+            <p>Export data as CSV file</p>
+            <a class="modal-close waves-effect waves-light btn" id="export-btn">Export CSV</a>
+            <a class="modal-close waves-effect waves-light btn red" id="export-close">Cancel</a>
+        </div>
+    </div>
+
+    <!-- Help modal -->
+    <div id="help-modal" class="modal">
+        <div class="modal-content">
+            <div class="carousel carousel-slider center">
+                <!-- About panel -->
+                <div class="carousel-item teal white-text">
+                    <h3>About the Application</h3>
+                    <div class="row">
+                        <div class="col s12">
+                            <p>The Teacher Substitution Scheduler is an application of the maximum bipartite matching algorithm.</p>
+                            <p>In this application:</p>
+                            <ul>
+                                <li>Available teachers form one side of the bipartite graph</li>
+                                <li>Classes needing substitutes form the other side</li>
+                                <li>Edges represent which teachers can teach which classes</li>
+                                <li>The algorithm finds the maximum number of classes that can be covered by the available teachers</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- How to use panel -->
+                <div class="carousel-item cyan white-text">
+                    <h3>How to Use</h3>
+                    <div class="row">
+                        <div class="col s12">
+                            <p>1. Add available substitute teachers using the form on the left</p>
+                            <p>2. Add classes needing substitutes using the form on the right</p>
+                            <p>3. Connect teachers to classes they can teach using the bottom form</p>
+                            <p>4. Click the "Find Substitutes" button to run the matching algorithm</p>
+                            <p>5. View the results at the bottom of the page</p>
+                            <p>You can also click "Load Sample Data" to see an example</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Algorithm panel -->
+                <div class="carousel-item blue-grey white-text">
+                    <h3>The Algorithm</h3>
+                    <div class="row">
+                        <div class="col s5">
+                            <img src="img/bipartite-graph.png" />
+                        </div>
+                        <div class="col s6">
+                            <p>This application uses the maximum bipartite matching algorithm.</p>
+                            <p>The algorithm finds paths in the graph where more teachers can be assigned to classes.</p>
+                            <p>When no more such paths can be found, the maximum matching has been achieved.</p>
+                            <p>This ensures the optimal assignment of substitute teachers to classes.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <i id="close-help" class="modal-close material-icons">clear</i>
+            <span id="swipe-text">Swipe&nbsp;<i class="material-icons tiny">swap_horiz</i></span>
+        </div>
+    </div>
+
+    <!-- Main content -->
+    <div id="teacher-sub-panel" class="row">
+        <div class="col s6">
+            <div class="card">
+                <div class="card-content">
+                    <span class="card-title">Available Teachers</span>
+                    <div class="input-field">
+                        <input id="new-available-teacher" type="text" class="validate">
+                        <label for="new-available-teacher">Add Available Teacher</label>
+                    </div>
+                    <button class="btn waves-effect waves-light" id="add-available-teacher">Add Teacher
+                        <i class="material-icons right">add</i>
+                    </button>
+                    <div class="right-align" style="margin-top: 10px;">
+                        <button class="btn-small waves-effect waves-light blue modal-trigger" href="#import-modal" id="import-teachers-btn">
+                            Import
+                            <i class="material-icons right">file_upload</i>
+                        </button>
+                        <button class="btn-small waves-effect waves-light green modal-trigger" href="#export-modal" id="export-teachers-btn">
+                            Export
+                            <i class="material-icons right">file_download</i>
+                        </button>
+                    </div>
+                    <ul id="available-teachers-list" class="collection"></ul>
+                </div>
+            </div>
+        </div>
+        <div class="col s6">
+            <div class="card">
+                <div class="card-content">
+                    <span class="card-title">Classes Needing Substitutes</span>
+                    <div class="input-field">
+                        <input id="new-class" type="text" class="validate">
+                        <label for="new-class">Add Class</label>
+                    </div>
+                    <div class="input-field">
+                        <input id="absent-teacher" type="text" class="validate">
+                        <label for="absent-teacher">Absent Teacher</label>
+                    </div>
+                    <button class="btn waves-effect waves-light" id="add-class">Add Class
+                        <i class="material-icons right">add</i>
+                    </button>
+                    <div class="right-align" style="margin-top: 10px;">
+                        <button class="btn-small waves-effect waves-light blue modal-trigger" href="#import-modal" id="import-classes-btn">
+                            Import
+                            <i class="material-icons right">file_upload</i>
+                        </button>
+                        <button class="btn-small waves-effect waves-light green modal-trigger" href="#export-modal" id="export-classes-btn">
+                            Export
+                            <i class="material-icons right">file_download</i>
+                        </button>
+                    </div>
+                    <ul id="classes-list" class="collection"></ul>
+                </div>
+            </div>
+        </div>
+        <div class="col s12">
+            <div class="card">
+                <div class="card-content teacher-preferences-content">
+                    <div class="row">
+                        <div class="col s8">
+                            <span class="card-title">Teacher Preferences & Constraints</span>
+                        </div>
+                        <div class="col s4 right-align">
+                            <button class="btn-small waves-effect waves-light blue modal-trigger" href="#import-modal" id="import-connections-btn">
+                                Import
+                                <i class="material-icons right">file_upload</i>
+                            </button>
+                            <button class="btn-small waves-effect waves-light green modal-trigger" href="#export-modal" id="export-connections-btn">
+                                Export
+                                <i class="material-icons right">file_download</i>
+                            </button>
+                        </div>
+                    </div>
+                    <p>Connect teachers to classes they can teach as substitutes:</p>
+                    <div class="input-field col s5">
+                        <select id="teacher-select">
+                            <option value="" disabled selected>Choose a teacher</option>
+                        </select>
+                        <label>Teacher</label>
+                    </div>
+                    <div class="input-field col s5">
+                        <select id="class-select">
+                            <option value="" disabled selected>Choose a class</option>
+                        </select>
+                        <label>Class</label>
+                    </div>
+                    <div class="input-field col s2">
+                        <button class="btn waves-effect waves-light" id="connect-teacher-class">Connect
+                            <i class="material-icons right">link</i>
+                        </button>
+                    </div>
+                    <div class="col s12" style="margin-top: 20px;">
+                        <button class="btn waves-effect waves-light green" id="run-matching">Find Substitutes
+                            <i class="material-icons right">play_arrow</i>
+                        </button>
+                        <button class="btn waves-effect waves-light blue" id="load-sample-data" style="margin-left: 10px;">
+                            Load Sample Data
+                            <i class="material-icons right">data_usage</i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col s12">
+            <div class="card">
+                <div class="card-content">
+                    <span class="card-title">Substitution Results</span>
+                    <div id="results-content" class="results-scroll">
+                        <p class="grey-text">Results will appear here after matching</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Help button -->
+    <div class="right-align" style="position: fixed; bottom: 20px; right: 20px;">
+        <a class="waves-effect waves-light btn-floating btn-large blue modal-trigger" href="#help-modal">
+            <i class="material-icons">help</i>
+        </a>
+    </div>
+
+    <!-- Hidden graph panel for visualization initialization -->
+    <div style="display: none;">
+        <div class="card">
+            <div class="card-content">
+                <span class="card-title">Visualization</span>
+                <div id="graph-panel">
+                    <svg id="graph"></svg>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html> 
