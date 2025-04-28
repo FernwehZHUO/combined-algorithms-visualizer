@@ -1,0 +1,29 @@
+# 依赖
+node_modules/
+/package-lock.json
+
+# 构建文件
+/matching-algorithm/
+/maxflow/
+
+# 开发环境
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# 日志
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# 编辑器
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# 操作系统
+.DS_Store
+Thumbs.db 

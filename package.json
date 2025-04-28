@@ -1,0 +1,23 @@
+{
+  "name": "combined-algorithms-visualizer",
+  "version": "1.0.0",
+  "description": "算法可视化项目集合",
+  "scripts": {
+    "prestart": "npm run install:maxflow",
+    "start": "npm-run-all --parallel start:*",
+    "start:static": "serve . -l 3000",
+    "start:maxflow": "cd ../maxflow && npm start",
+    "start:matching": "serve ../match -l 3002",
+    "start:teacher": "serve ../TeacherSubstitutionApp -l 3003",
+    "install:maxflow": "cd ../maxflow && npm install",
+    "build": "npm run install:maxflow && npm-run-all build:*",
+    "build:maxflow": "cd ../maxflow && npm run build",
+    "postbuild": "node scripts/combine-builds.js"
+  },
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "npm-run-all": "^4.1.5",
+    "serve": "^14.2.0"
+  }
+} 
