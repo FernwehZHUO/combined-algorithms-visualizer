@@ -12,7 +12,7 @@ This project combines multiple algorithm visualization tools into a single unifi
 
 ## Live Demo
 
-The application is deployed on GitHub Pages at: [https://yourusername.github.io/combined-algorithms-visualizer/](https://yourusername.github.io/combined-algorithms-visualizer/)
+The application is deployed on GitHub Pages at: https://fernwehzhuo.github.io/combined-algorithms-visualizer/
 
 ## Features
 
